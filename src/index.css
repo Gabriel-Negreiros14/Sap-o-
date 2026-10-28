@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply min-h-screen bg-sapo-50 text-sapo-900 antialiased;
+    background-image: linear-gradient(180deg, #eefff0 0%, #e2f8e6 100%);
+    background-attachment: fixed;
+  }
+
+  button {
+    @apply cursor-pointer disabled:cursor-not-allowed;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 sm:p-5;
+  }
+
+  .card-title {
+    @apply flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-500;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-base text-slate-800 placeholder-slate-400 outline-none transition focus:border-sapo-500 focus:ring-2 focus:ring-sapo-200;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-sapo-400 focus-visible:ring-offset-2 active:scale-[0.98] disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply btn bg-sapo-600 text-white shadow-sm hover:bg-sapo-700;
+  }
+
+  .btn-soft {
+    @apply btn bg-sapo-50 text-sapo-700 ring-1 ring-sapo-200 hover:bg-sapo-100;
+  }
+
+  .btn-ghost {
+    @apply btn text-slate-600 hover:bg-slate-100;
+  }
+
+  .btn-danger {
+    @apply btn bg-red-50 text-red-700 ring-1 ring-red-200 hover:bg-red-100;
+  }
+}

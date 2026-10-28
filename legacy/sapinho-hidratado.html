@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sapinho Hidratado</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eefff0;
+            color: #2d4a22;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 450px;
+            background: white;
+            margin: 0 auto;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+        }
+        .pet-container {
+            background-color: #d1f7d6;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        .pet-avatar {
+            font-size: 80px;
+            margin: 10px 0;
+            display: inline-block;
+            transition: transform 0.3s;
+        }
+        .pet-avatar:active {
+            transform: scale(1.2);
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .stat-card {
+            background: #f0fbf2;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #c3ecd0;
+        }
+        .progress-bar {
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+            height: 20px;
+        }
+        .progress-fill {
+            background-color: #4caf50;
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        button {
+            background-color: #42a95c;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #358a49;
+        }
+        input {
+            width: calc(100% - 24px);
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🐸 Sapinho Hidratado</h2>
+    <p>Beba água para evoluir seu bichinho!</p>
+
+    <div class="pet-container">
+        <div id="pet-fase" style="font-weight: bold; text-transform: uppercase;">Fase: Girino</div>
+        <div id="sapinho" class="pet-avatar">🐟</div>
+        <div class="progress-bar">
+            <div id="xp-bar" class="progress-fill"></div>
+        </div>
+        <div id="xp-texto">XP: 0 / 100</div>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <div>Meta Diária</div>
+            <span id="txt-meta">2000</span>ml
+        </div>
+        <div class="stat-card">
+            <div>Hoje bebeu</div>
+            <span id="txt-atual">0</span>ml
+        </div>
+    </div>
+
+    <input type="number" id="qtd-agua" value="250" min="50" step="50">
+    <button onclick="beberAgua()">🥛 Registrar Água</button>
+</div>
+
+<script>
+    // Banco de Dados Local Simples (Salvando o estado do Sapo)
+    let dados = JSON.parse(localStorage.getItem('sapinho_dados')) || {
+        xp: 0,
+        nivel: 1,
+        fase: 'Girino',
+        agua_hoje: 0,
+        meta: 2000
+    };
+
+    // Fases de evolução do sapinho
+    const fasesSapinho = {
+        'Girino': '🐟',
+        'Crescendo Pernas': '🦎',
+        'Sapinho Jovem': '🐸',
+        'Sapo Rei': '👑🐸'
+    };
+
+    function atualizarTela() {
+        document.getElementById('txt-atual').innerText = dados.agua_hoje;
+        document.getElementById('txt-meta').innerText = dados.meta;
+        document.getElementById('pet-fase').innerText = `Fase: ${dados.fase} (Nív. ${dados.nivel})`;
+        document.getElementById('sapinho').innerText = fasesSapinho[dados.fase] || '🐸';
+        
+        let porcentagemXp = dados.xp % 100;
+        document.getElementById('xp-bar').style.width = porcentagemXp + '%';
+        document.getElementById('xp-texto').innerText = `XP: ${porcentagemXp} / 100`;
+
+        localStorage.setItem('sapinho_dados', JSON.stringify(dados));
+    }
+
+    function beberAgua() {
+        let input = document.getElementById('qtd-agua');
+        let ml = parseInt(input.value);
+        if (isNaN(ml) || ml <= 0) return;
+
+        dados.agua_hoje += ml;
+        dados.xp += Math.floor(ml * 0.2); // Cada copo dá XP
+
+        // Regras de evolução baseadas em metas de XP alcançadas
+        if (dados.xp >= 300) {
+            dados.fase = 'Sapo Rei';
+            dados.nivel = 4;
+        } else if (dados.xp >= 200) {
+            dados.fase = 'Sapinho Jovem';
+            dados.nivel = 3;
+        } else if (dados.xp >= 100) {
+            dados.fase = 'Crescendo Pernas';
+            dados.nivel = 2;
+        }
+
+        atualizarTela();
+    }
+
+    atualizarTela();
+</script>
+
+</body>
+</html>
